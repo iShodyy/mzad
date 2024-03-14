@@ -1,7 +1,8 @@
 const { ButtonInteraction } = require('discord.js');
 const fs = require('fs')
+const config = require('../config.json');
 const { QuickDB } = require('quick.db');
-const ec = new QuickDB({ filePath: 'sqlite/ec.sqlite' });
+const ec = new QuickDB({ filePath: config.ecoDatabase });
 let lastp;
 let cooldown = false
 module.exports = {

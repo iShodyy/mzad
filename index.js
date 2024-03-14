@@ -2,7 +2,7 @@ const { Client, GatewayIntentBits , REST ,Routes ,Collection  } = require('disco
 const config = require('./config.json');
 const fs = require('fs');
 const { QuickDB } = require('quick.db');
-const ec = new QuickDB({ filePath: './sqlite/ec.sqlite' });
+const ec = new QuickDB({ filePath: config.ecoDatabase });
 
 const client = new Client({ intents: [
     GatewayIntentBits.Guilds,
