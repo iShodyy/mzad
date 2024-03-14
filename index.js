@@ -7,8 +7,6 @@ const {
 } = require('discord.js');
 const config = require('./config.json');
 const fs = require('fs');
-const { QuickDB } = require('quick.db');
-const ec = new QuickDB({ filePath: config.ecoDatabase });
 
 const client = new Client({
   intents: [
@@ -21,6 +19,7 @@ const client = new Client({
 
 client.commands = new Collection();
 client.interactions = new Collection();
+
 const commands = [];
 const commandFiles = fs
   .readdirSync('./commands')
@@ -46,12 +45,11 @@ client.once('ready', async (bot) => {
     body: commands,
   });
   console.log(`${bot.user.tag} is Ready`);
+
   const database = 'mzaddata.json';
   if (fs.existsSync(database)) {
     fs.writeFileSync(database, '{}');
   }
-
-  console.log(await ec.all());
 });
 
 client.on('interactionCreate', async (interaction) => {
@@ -60,20 +58,24 @@ client.on('interactionCreate', async (interaction) => {
       const commandsRunner = client.commands.get(interaction.commandName);
       commandsRunner.execute(client, config, interaction);
     }
+
     if (
       !interaction.isStringSelectMenu() &&
       !interaction.isButton() &&
       !interaction.isModalSubmit()
-    )
+    ) {
       return;
+    }
 
     const interactionRun = client.interactions.get(
       interaction.customId.split('*')[0]
     );
-
-    if (interactionRun) interactionRun.execute(client, config, interaction);
+    if (interactionRun) {
+      interactionRun.execute(client, config, interaction);
+    }
   } catch (error) {
     console.log(error);
   }
 });
+
 client.login(config.token);

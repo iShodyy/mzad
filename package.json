@@ -3,14 +3,19 @@
   "name": "auction",
   "private": true,
   "license": "MIT",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "dependencies": {
+    "@quick.eco/sqlite": "^1.0.4",
     "better-sqlite3": "^9.4.3",
     "discord.js": "^14.14.1",
-    "quick.db": "^9.1.7"
+    "quick.eco": "^6.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
   }
 }
