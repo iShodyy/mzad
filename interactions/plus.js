@@ -3,8 +3,9 @@ const fs = require('fs')
 const config = require('../config.json');
 const { QuickDB } = require('quick.db');
 const ec = new QuickDB({ filePath: config.ecoDatabase });
-let lastp;
+
 let cooldown = false
+
 module.exports = {
     name: 'plus',
     /**
@@ -18,7 +19,6 @@ module.exports = {
             setTimeout(() => {
                 cooldown = false;
             }, 1000);
-
             const check = await ec.get(`Economy_${interaction.guild.id}_${interaction.user.id}.money`);
             if (typeof pr === 'undefined')return interaction.reply({content:`حدث خطأ` , ephemeral:true})
             if (typeof sa === 'undefined')return interaction.reply({content:`حدث خطأ` , ephemeral:true})
@@ -28,7 +28,7 @@ module.exports = {
                 if (fs.existsSync(database)) {
                     const data = JSON.parse(fs.readFileSync(database, 'utf-8'));
                     if (data[interaction.user.id]?.isout === true ) return await interaction.reply({content:`لقد انسحبت` , ephemeral:true})
-                    if (data['total'] && data['total'] + pr >= check) return interaction.reply({content:`ليس لديك مبلغ كافي` , ephemeral:true})
+                    if (data['total'] && data['total'] + pr > check) return interaction.reply({content:`ليس لديك مبلغ كافي` , ephemeral:true})
 
                     if(interaction.user.id === data['winer']) return await interaction.reply({content:`يجب ان يقوم شخص اخر بالمزايدة` , ephemeral:true})
 
@@ -50,8 +50,7 @@ module.exports = {
                     }
 
                     fs.writeFileSync(database, JSON.stringify(data))
-                    await interaction.deferReply()
-                    await interaction.editReply(`قام <@${interaction.user.id}> بالمزايدة على المبلغ, ${data['total']}`)
+                    await interaction.reply(`قام <@${interaction.user.id}> بالمزايدة على المبلغ, ${data['total']}`)
                     const channel = interaction.guild.channels.cache.get(config.channelid)
                     if (channel) channel.send(`${interaction.user.id}:-${pr}`)
                 }

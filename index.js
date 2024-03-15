@@ -30,6 +30,7 @@ for (const file of commandFiles) {
   client.commands.set(command.name, command);
   commands.push(command.data);
 }
+ 
 
 const interactionsFiles = fs
   .readdirSync('./interactions')
