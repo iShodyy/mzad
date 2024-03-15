@@ -1,10 +1,6 @@
 const {
     SlashCommandBuilder,
-    ActionRowBuilder,
-    ButtonBuilder,
-    ButtonStyle,
     CommandInteraction,
-    EmbedBuilder
 } = require('discord.js');
 const fs = require('fs')
 
@@ -22,17 +18,23 @@ module.exports = {
             const isadmin = interaction.member.roles.cache.some(role => config?.adminrolesid.includes(role.id))
             if(!isadmin && !interaction.member.permissions.has('Administrator')) return;
             if (typeof msg === 'undefined')return await interaction.reply({content:`لايوجد مزاد حتى اللآن` , ephemeral:true})
-
                 const database = 'mzaddata.json';
                 if (fs.existsSync(database)) {
                     fs.readFile(database, 'utf8', async (err, fileData) => {
                         try {
+                            if (err) return console.error(err);
                             const data = JSON.parse(fileData);
                             if(data['ison'] === false) return interaction.reply({content:`لايوجد مزاد حتى اللآن` , ephemeral:true})
                             try { await msg.delete() } catch (error) { console.log(error) }
-                            if (err) return console.error(err);
-                            data['ison'] = false
-                            fs.writeFileSync(database, JSON.stringify(data))
+                            const users = Object.values(data).filter(user => typeof user === 'object' && user.userid);
+                            const channel = interaction.guild.channels.cache.get(config.channelid)
+                            users.sort((a, b) => b.coins - a.coins);
+                            users.forEach(user => {
+                                if(data.total <= 0)return;
+                                if(data[user.userid].isout === true) return
+                                if (channel) channel.send(`${user.userid}:${user.coins}`)
+                            })
+                            fs.writeFileSync(database, '{"ison":false}')
                             rp = await interaction.reply({content:`تم إلغاء المزاد`})
                         }catch(err){
                             console.log(err)
@@ -45,8 +47,6 @@ module.exports = {
                         await rp.delete()
                     } catch (error) { console.log(error) }
                 }, 10000);
-        } catch (error) {
-            console.error(error);
-        };
+        } catch (error) { console.error(error) }
     }
 };
