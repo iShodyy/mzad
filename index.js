@@ -10,7 +10,7 @@ const fs = require('fs');
 const { EconomyManager } = require('quick.eco');
 const eco = new EconomyManager({
   adapter: 'sqlite',
-  adapterOptions: { filename: './sqlite/eco' },
+  adapterOptions: { filename: config.ecoDatabase },
 });
 
 const client = new Client({
@@ -33,7 +33,6 @@ for (const file of commandFiles) {
   client.commands.set(command.name, command);
   commands.push(command.data);
 }
- 
 
 const interactionsFiles = fs
   .readdirSync('./interactions')
