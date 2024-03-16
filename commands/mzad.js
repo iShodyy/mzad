@@ -50,7 +50,7 @@ module.exports = {
             if(!isadmin && !interaction.member.permissions.has('Administrator')) return;
             
             try {
-                
+                if (!fs.existsSync(database)) fs.writeFileSync(database, '{}')
                 fs.readFile(database, 'utf8', async (err, fileData) => {
                     if (err) return console.error(err);
                     const data = JSON.parse(fileData);
