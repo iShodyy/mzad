@@ -78,7 +78,9 @@ module.exports = {
           const channel = interaction.guild.channels.cache.get(
             config.channelid
           );
-          if (channel) channel.send(`${interaction.user.id}:-${pr}`);
+          setTimeout(() => {
+            if (channel) channel.send(`${interaction.user.id}:-${pr}`);
+        }, 3000);
         }
       } else {
         await interaction.deferReply({ ephemeral: true });
