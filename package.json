@@ -3,7 +3,7 @@
   "name": "auction",
   "private": true,
   "license": "MIT",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
@@ -11,6 +11,6 @@
   "dependencies": {
     "better-sqlite3": "^9.4.3",
     "discord.js": "^14.14.1",
-    "quick.db": "^9.1.7"
+    "quick.eco": "^6.0.0"
   }
 }
