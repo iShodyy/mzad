@@ -7,7 +7,7 @@ const {
 } = require('discord.js');
 const config = require('./config.json');
 const fs = require('fs');
-const { QuickDB } = require('quick.db');
+const { QuickDB } = require('quick.eco');
 const ec = new QuickDB({ filePath: config.ecoDatabase });
 
 const client = new Client({
