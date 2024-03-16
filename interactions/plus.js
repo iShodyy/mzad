@@ -1,8 +1,11 @@
 const { ButtonInteraction } = require('discord.js');
 const fs = require('fs')
 const config = require('../config.json');
-const { QuickDB } = require('quick.eco');
-const ec = new QuickDB({ filePath: config.ecoDatabase });
+const { EconomyManager } = require('quick.eco');
+const eco = new EconomyManager({
+  adapter: 'sqlite',
+  adapterOptions: { filename: './sqlite/eco' },
+});
 
 let cooldown = false
 
