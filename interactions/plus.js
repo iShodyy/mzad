@@ -22,9 +22,8 @@ module.exports = {
       setTimeout(() => {
         cooldown = false;
       }, 1000);
-      const check = await ec.get(
-        `Economy_${interaction.guild.id}_${interaction.user.id}.money`
-      );
+      const check = await eco.fetchMoney(interaction.user.id)
+
       if (typeof pr === 'undefined')
         return interaction.reply({ content: `حدث خطأ`, ephemeral: true });
       if (typeof sa === 'undefined')
@@ -33,7 +32,7 @@ module.exports = {
         return interaction.reply({
           content: `لايمكنك المزايدة على سلعتك`,
           ephemeral: true,
-        });
+        })
       if (check && check >= pr) {
         const database = 'mzaddata.json';
         if (fs.existsSync(database)) {
@@ -89,4 +88,4 @@ module.exports = {
       console.error(error);
     }
   },
-};
+}
