@@ -181,9 +181,11 @@ module.exports = {
                                         }, 4000);
                                     }
                                 }else{
-                                    if(data.total <= 0)return;
-                                    if(data[user.userid].isout === true) return
-                                    if (channel) await channel.send(`${user.userid}:${user.coins}`)
+                                    setTimeout(async() => {
+                                        if(data.total <= 0)return;
+                                        if(data[user.userid].isout === true) return
+                                        if (channel) await channel.send(`${user.userid}:${user.coins}`)
+                                    }, 4000);
                                 }
                             })
                             try {
