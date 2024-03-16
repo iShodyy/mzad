@@ -1,6 +1,9 @@
 {
-  "author": "iShodyy",
   "name": "auction",
+  "author": "iShodyy",
+  "contributors": [
+    "Majoramari"
+  ],
   "private": true,
   "license": "MIT",
   "version": "1.0.6",
@@ -9,6 +12,7 @@
     "start": "node index.js"
   },
   "dependencies": {
+    "@quick.eco/sqlite": "^1.0.4",
     "better-sqlite3": "^9.4.3",
     "discord.js": "^14.14.1",
     "quick.eco": "^6.0.0"

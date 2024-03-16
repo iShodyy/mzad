@@ -5,15 +5,15 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@quick.eco/sqlite':
+    specifier: ^1.0.4
+    version: 1.0.4
   better-sqlite3:
     specifier: ^9.4.3
     version: 9.4.3
   discord.js:
     specifier: ^14.14.1
     version: 14.14.1
-  quick.db:
-    specifier: ^9.1.7
-    version: 9.1.7
   quick.eco:
     specifier: ^6.0.0
     version: 6.0.0
@@ -93,6 +93,12 @@ packages:
     engines: {node: '>=14'}
     dev: false
 
+  /@quick.eco/sqlite@1.0.4:
+    resolution: {integrity: sha512-lLqi/sSB2O2h+JHp1fRolzWK2YCAUJdRSLtT8gFQr4eyugH+8mwILq/wdWGWA4HwiChZKUoIF6/Vx8+Deu0UKQ==}
+    dependencies:
+      better-sqlite3: 7.6.2
+    dev: false
+
   /@sapphire/async-queue@1.5.2:
     resolution: {integrity: sha512-7X7FFAA4DngXUl95+hYbUF19bp1LGiffjJtu7ygrZrbdCSsdDDBaSjB7Akw0ZbOu6k0xpXyljnJ6/RZUvLfRdg==}
     engines: {node: '>=v14.0.0', npm: '>=7.0.0'}
@@ -130,6 +136,14 @@ packages:
 
   /base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
+    dev: false
+
+  /better-sqlite3@7.6.2:
+    resolution: {integrity: sha512-S5zIU1Hink2AH4xPsN0W43T1/AJ5jrPh7Oy07ocuW/AKYYY02GWzz9NH0nbSMn/gw6fDZ5jZ1QsHt1BXAwJ6Lg==}
+    requiresBuild: true
+    dependencies:
+      bindings: 1.5.0
+      prebuild-install: 7.1.2
     dev: false
 
   /better-sqlite3@9.4.3:
@@ -321,12 +335,6 @@ packages:
     dependencies:
       end-of-stream: 1.4.4
       once: 1.4.0
-    dev: false
-
-  /quick.db@9.1.7:
-    resolution: {integrity: sha512-ZLPVLVFZtvFRLHqIK99iyrLDUznOTpnp5tB+QpGErT+reDSvgBELuVsMkGSSiqKT9R2YSOhO+096Wb0xTaOHMA==}
-    dependencies:
-      lodash: 4.17.21
     dev: false
 
   /quick.eco@6.0.0:
