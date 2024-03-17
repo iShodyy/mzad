@@ -65,14 +65,14 @@ module.exports = {
                 console.log(error)
             }
                 
-            const suser = interaction.options.getUser('صاحب_السلعة');
+            const user = interaction.options.getUser('صاحب_السلعة');
             const name = interaction.options.getString('اسم_السلعة');
             const time = interaction.options.getString('مدة_السلعة');
             const plusM = interaction.options.getInteger('مبلغ_المزايدة');
             const pic = interaction.options.getString('الصورة');
             const des = interaction.options?.getString('الوصف');
             pr=plusM;
-            sa=suser;
+            sa=user;
 
             if (time.toLowerCase().endsWith('m')) {
                 timeInMillis = parseInt(time) * 60000;
@@ -107,10 +107,10 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setColor('Red')
                 .setTitle(`${name}`)
-                .setThumbnail(suser.avatarURL())
+                .setThumbnail(user.avatarURL())
                 .setFields(
                     {name:` ` , value:` ` , inline:false},
-                    {name:` ` , value:`${suser}` , inline:false},
+                    {name:` ` , value:`${user}` , inline:false},
                     {name:`مبلغ المزايدة :` , value:`${plusM}` , inline:true},
                     {name:`مدة المزاد :` , value:createDiscordTimestamp(time) , inline:true},
                     {name:` ` , value:` ` , inline:false},
@@ -156,43 +156,28 @@ module.exports = {
                             if (err) return console.error(err);
                             const data = JSON.parse(fileData);
                             if (edit) return;
-                            if(data['ison'] === false) return;
-                            if (data['winer'] === ''){
+                            if(data.ison === false) return;
+                            if (data.winer === ''){
                                 const winer = Object.values(data).filter(user => typeof user === 'object' && user.userid && !user.isout);
                                 winer.sort((a, b) => b.coins - a.coins);
                                 if(winer.length < 0){
-                                    data['winer'] = winer[0].userid
+                                    data.winer = winer[0].userid
                                 }
                             }
-                            const users = Object.values(data).filter(user => typeof user === 'object' && user.userid);
                             const channel = interaction.guild.channels.cache.get(config.channelid)
-                            users.sort((a, b) => b.coins - a.coins);
-                            users.forEach(async user => {
-                                if(user.userid === data['winer']){
-                                    if (channel){
-                                        await channel.send(`${user.userid}:${user.coins}`)
-                                        setTimeout(async () => {
-                                            if(data.total <= 0)return;
-                                            await channel.send(`${user.userid}:-${data.total}`)
-                                            setTimeout(async () => {
-                                                if(data.total <= 0)return;
-                                                await channel.send(`${suser.id}:${data.total}`)
-                                            }, 4000);
-                                        }, 4000);
-                                    }
-                                }else{
-                                    setTimeout(async() => {
-                                        if(data.total <= 0)return;
-                                        if(data[user.userid].isout === true) return
-                                        if (channel) await channel.send(`${user.userid}:${user.coins}`)
+                            if(data.total !== 0 && data.winer !== ''){
+                                if (channel){
+                                    await channel.send(`${data.winer}:-${data.total}`)
+                                    setTimeout(async () => {
+                                        await channel.send(`${user.id}:${data.total}`)
                                     }, 4000);
                                 }
-                            })
+                            }
                             try {
                                 embed.setColor('#313338')
                                 embed.setFields(
                                     {name:` ` , value:` ` , inline:false},
-                                    {name:` ` , value:`${suser}` , inline:false},
+                                    {name:` ` , value:`${user}` , inline:false},
                                     {name:`مبلغ المزايدة :` , value:`${plusM}` , inline:true},
                                     {name:`مدة المزاد :` , value:`\`END\`` , inline:true},
                                     {name:` ` , value:` ` , inline:false},
