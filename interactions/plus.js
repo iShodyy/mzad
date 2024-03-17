@@ -74,13 +74,7 @@ module.exports = {
           fs.writeFileSync(database, JSON.stringify(data));
           await interaction.reply(
             `قام <@${interaction.user.id}> بالمزايدة على المبلغ, ${data['total']}`
-          );
-          const channel = interaction.guild.channels.cache.get(
-            config.channelid
-          );
-          setTimeout(() => {
-            if (channel) channel.send(`${interaction.user.id}:-${pr}`);
-        }, 3000);
+          )
         }
       } else {
         await interaction.deferReply({ ephemeral: true });

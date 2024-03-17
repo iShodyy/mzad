@@ -1,5 +1,6 @@
 const { ButtonInteraction } = require('discord.js');
 const fs = require('fs')
+let cooldown = false;
 
 module.exports = {
     name: 'out',
@@ -9,6 +10,11 @@ module.exports = {
      */
     async execute(client, config, interaction) {
         try {
+            if (cooldown) return;
+            cooldown = true;
+            setTimeout(() => {
+                cooldown = false;
+            }, 1000);                                                                                                                                           
             const database = 'mzaddata.json';
             if (fs.existsSync(database)) {
                 const data = JSON.parse(fs.readFileSync(database, 'utf-8'));
@@ -18,14 +24,12 @@ module.exports = {
                     if(interaction.user.id === data['winer']){
                         data['total'] -= data[interaction.user.id].coins
                         data['winer'] = ""
-                        const channel = interaction.guild.channels.cache.get(config.channelid)
-                        await channel.send({content:`${interaction.user.id}:${data[interaction.user.id].coins}`})
-                        data[interaction.user.id].isout = true
+                        data[interaction.user.id].isout = true                                                                                                                                           
                         fs.writeFileSync(database, JSON.stringify(data, null, 2))
                         await interaction.reply({content:`انسحب <@${interaction.user.id}> من المزاد ${data['total']}`})
-                    }else{
+                    }else{                                                                                                                                           
                         return await interaction.reply({content:`يجب ان تقوم بالمزايدة` , ephemeral:true})
-                    }
+                    }                                                                                                                                           
                 } else {
                     await interaction.reply({content:`يجب ان تقوم بالمزايدة` , ephemeral:true})
                 }
