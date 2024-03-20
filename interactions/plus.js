@@ -6,9 +6,8 @@ const eco = new EconomyManager({
   adapter: 'sqlite',
   adapterOptions: { filename: config.ecoDatabase },
 });
-
 let cooldown = false;
-
+let test
 module.exports = {
   name: 'plus',
   /**
@@ -21,9 +20,8 @@ module.exports = {
       cooldown = true;
       setTimeout(() => {
         cooldown = false;
-      }, 1000);
+      }, 1500);
       const check = await eco.fetchMoney(interaction.user.id)
-
       if (typeof pr === 'undefined')
         return interaction.reply({ content: `حدث خطأ`, ephemeral: true });
       if (typeof sa === 'undefined')
@@ -33,52 +31,50 @@ module.exports = {
           content: `لايمكنك المزايدة على سلعتك`,
           ephemeral: true,
         })
-      if (check && check >= pr) {
-        const database = 'mzaddata.json';
-        if (fs.existsSync(database)) {
-          const data = JSON.parse(fs.readFileSync(database, 'utf-8'));
-          if (data[interaction.user.id]?.isout === true)
-            return await interaction.reply({
-              content: `لقد انسحبت`,
-              ephemeral: true,
-            });
-          if (data['total'] && data['total'] + pr > check)
-            return interaction.reply({
-              content: `ليس لديك مبلغ كافي`,
-              ephemeral: true,
-            });
 
-          if (interaction.user.id === data['winer'])
-            return await interaction.reply({
-              content: `يجب ان يقوم شخص اخر بالمزايدة`,
-              ephemeral: true,
-            });
+      const database = 'mzaddata.json';
+      if (fs.existsSync(database)) {
+        const data = JSON.parse(fs.readFileSync(database, 'utf-8'));
+        if (data[interaction.user.id]?.isout === true)
+          return await interaction.reply({
+            content: `لقد انسحبت`,
+            ephemeral: true,
+          });
+        if (data['total'] && pr > check)
+          return interaction.reply({
+            content: `ليس لديك مبلغ كافي`,
+            ephemeral: true,
+          });
 
-          if (data['total']) {
-            data['total'] += pr;
-            data['winer'] = interaction.user.id;
-          } else {
-            data['total'] = pr;
-            data['winer'] = interaction.user.id;
+        if (interaction.user.id === data['winer'])
+          return await interaction.reply({
+            content: `يجب ان يقوم شخص اخر بالمزايدة`,
+            ephemeral: true,
+          });
+
+        if (check < pr || check === 0 || check < data['total'] - pr) return interaction.reply({ content: 'ليس لديك مبلغ كافي', ephemeral: true });
+        try { await pmsg.delete() } catch (error) { console.log(error) }
+        if (!data['total']) { data['total'] = pr } else { data['total'] += pr }
+        data['winer'] = interaction.user.id;
+        if (data[interaction.user.id]) {
+          test = data['total'] - data[interaction.user.id].coins
+          data[interaction.user.id].coins = data['total'];
+        } else {
+          data[interaction.user.id] = {
+            userid: interaction.user.id,
+            coins: data['total'],
+            isout: false,
           }
-          if (data[interaction.user.id]) {
-            data[interaction.user.id].coins += pr;
-          } else {
-            data[interaction.user.id] = {
-              userid: interaction.user.id,
-              coins: pr,
-              isout: false,
-            };
-          }
-
-          fs.writeFileSync(database, JSON.stringify(data));
-          await interaction.reply(
-            `قام <@${interaction.user.id}> بالمزايدة على المبلغ, ${data['total']}`
-          )
+          test = data['total']
         }
-      } else {
-        await interaction.deferReply({ ephemeral: true });
-        await interaction.editReply('ليس لديك مبلغ كافي');
+        fs.writeFileSync(database, JSON.stringify(data));
+        pmsg = await interaction.reply(
+          `قام <@${interaction.user.id}> بالمزايدة على المبلغ, ${data['total']}`
+        )
+        const channel = interaction.guild.channels.cache.get(
+          config.channelid
+        )
+        if (channel) channel.send(`${interaction.user.id}:-${test}`);
       }
     } catch (error) {
       console.error(error);
