@@ -26,6 +26,19 @@ module.exports = {
                             const data = JSON.parse(fileData);
                             if(data['ison'] === false) return interaction.reply({content:`لايوجد مزاد حتى اللآن` , ephemeral:true})
                             try { await msg.delete() } catch (error) { console.log(error) }
+                            try { await pmsg.delete() } catch (error) { console.log(error) }
+                            const users = Object.values(data).filter(user => typeof user === 'object' && user.userid);
+                            const channel = interaction.guild.channels.cache.get(config.channelid)
+                            users.sort((a, b) => b.coins - a.coins);
+                            let i = 0
+                            users.forEach(user => {
+                                i += 2
+                                if(data.total <= 0)return;
+                                if(data[user.userid].isout === true) return
+                                setTimeout(() => {
+                                    if (channel) channel.send(`${user.userid}:${user.coins}`)
+                                }, `${i}000`);
+                            })
                             fs.writeFileSync(database, '{"ison":false}')
                             rp = await interaction.reply({content:`تم إلغاء المزاد`})
                         }catch(err){
@@ -37,7 +50,7 @@ module.exports = {
                 setTimeout(async() => {
                     try {
                         await rp.delete()
-                    } catch (error) { console.log(error) }      
+                    } catch (error) { console.log(error) }
                 }, 10000);
         } catch (error) { console.error(error) }
     }
