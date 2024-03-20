@@ -53,8 +53,6 @@ client.once('ready', async (bot) => {
   if (fs.existsSync(database)) {
     fs.writeFileSync(database, '{}');
   }
-
-  console.log(await ec.all());
 });
 
 client.on('interactionCreate', async (interaction) => {
