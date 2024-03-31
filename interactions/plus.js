@@ -6,6 +6,8 @@ const eco = new EconomyManager({
   adapter: 'sqlite',
   adapterOptions: { filename: config.ecoDatabase },
 });
+// const { QuickDB } = require('quick.db');
+// const ec = new QuickDB({ filePath: 'sqlite/ec.sqlite' });
 let cooldown = false;
 let test
 module.exports = {
@@ -22,6 +24,7 @@ module.exports = {
         cooldown = false;
       }, 1500);
       const check = await eco.fetchMoney(interaction.user.id)
+      // const check = await ec.get(`Economy_${interaction.guild.id}_${interaction.user.id}.money`);
       if (typeof pr === 'undefined')
         return interaction.reply({ content: `حدث خطأ`, ephemeral: true });
       if (typeof sa === 'undefined')
@@ -51,14 +54,15 @@ module.exports = {
             content: `يجب ان يقوم شخص اخر بالمزايدة`,
             ephemeral: true,
           });
-
-        if (check < pr || check === 0 || check < data['total'] - pr) return interaction.reply({ content: 'ليس لديك مبلغ كافي', ephemeral: true });
+        let test1 = data['total'] + pr - data[interaction.user.id]?.coins
+        if (check < pr || check === 0 || check - test1 < 0) return interaction.reply({ content: 'ليس لديك مبلغ كافي', ephemeral: true });
         try { await pmsg.delete() } catch (error) { console.log(error) }
         if (!data['total']) { data['total'] = pr } else { data['total'] += pr }
         data['winer'] = interaction.user.id;
         if (data[interaction.user.id]) {
           test = data['total'] - data[interaction.user.id].coins
-          data[interaction.user.id].coins = data['total'];
+          data[interaction.user.id].coins += test;
+          // data[interaction.user.id].coins = data['total'];
         } else {
           data[interaction.user.id] = {
             userid: interaction.user.id,
@@ -74,7 +78,11 @@ module.exports = {
         const channel = interaction.guild.channels.cache.get(
           config.channelid
         )
-        if (channel) channel.send(`${interaction.user.id}:-${test}`);
+        await ec.sub(
+          `Economy_${interaction.guild.id}_${interaction.user.id}.money`,
+          parseInt(test)
+        )
+        // if (channel) channel.send(`${interaction.user.id}:-${test}`);
       }
     } catch (error) {
       console.error(error);
