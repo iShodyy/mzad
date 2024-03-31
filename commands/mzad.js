@@ -128,12 +128,12 @@ module.exports = {
                         .setLabel('مزايدة')
                         .setStyle(ButtonStyle.Danger),
                 )
-                .addComponents(
-                    new ButtonBuilder()
-                        .setCustomId('out')
-                        .setLabel('انسحاب')
-                        .setStyle(ButtonStyle.Secondary)
-                );
+            // .addComponents(
+            //     new ButtonBuilder()
+            //         .setCustomId('out')
+            //         .setLabel('انسحاب')
+            //         .setStyle(ButtonStyle.Secondary)
+            // );
 
             setTimeout(async () => {
                 try {
@@ -143,10 +143,10 @@ module.exports = {
                     console.log(error)
                 }
             }, 1000);
-            here = await interaction.channel.send(`@here`)
-            setTimeout(async () => {
-                await here.delete()
-            }, 2000);
+            // here = await interaction.channel.send(`@here`)
+            // setTimeout(async () => {
+            //     await here.delete()
+            // }, 2000);
 
             setTimeout(async () => {
                 try {
@@ -157,7 +157,7 @@ module.exports = {
                             const data = JSON.parse(fileData);
                             if (edit) return;
                             if (data['ison'] === false) return;
-                            if (data['winer'] === '') {
+                            if (data['winer'] === "") {
                                 const winer = Object.values(data).filter(user => typeof user === 'object' && user.userid && !user.isout);
                                 winer.sort((a, b) => b.coins - a.coins);
                                 if (winer.length < 0) {
@@ -170,25 +170,26 @@ module.exports = {
                             users.forEach(async user => {
                                 if (user.userid === data['winer']) {
                                     if (channel) {
+                                        // setTimeout(async () => {
+                                        // await channel.send(`${user.userid}:${user.coins}`)
                                         setTimeout(async () => {
-                                            await channel.send(`${user.userid}:${user.coins}`)
+                                            if (data.total <= 0) return;
+                                            await channel.send(`${user.userid}:-${data.total}`)
                                             setTimeout(async () => {
                                                 if (data.total <= 0) return;
-                                                await channel.send(`${user.userid}:-${data.total}`)
-                                                setTimeout(async () => {
-                                                    if (data.total <= 0) return;
-                                                    await channel.send(`${suser.id}:${data.total}`)
-                                                }, 2500);
-                                            }, 1500);
+                                                await channel.send(`${suser.id}:${data.total}`)
+                                            }, 1000);
                                         }, 3000);
+                                        // }, 6000);
                                     }
-                                } else {
-                                    setTimeout(async () => {
-                                        if (data.total <= 0) return;
-                                        if (data[user.userid].isout === true) return
-                                        if (channel) await channel.send(`${user.userid}:${user.coins}`)
-                                    }, 4500)
                                 }
+                                // else {
+                                //     setTimeout(async () => {
+                                //         if (data.total <= 0) return;
+                                //         if (data[user.userid].isout === true) return
+                                //         if (channel) await channel.send(`${user.userid}:${user.coins}`)
+                                //     }, 1000)
+                                // }
                             })
                             try {
                                 embed.setColor('#313338')
