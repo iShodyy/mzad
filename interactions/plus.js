@@ -1,13 +1,13 @@
 const { ButtonInteraction } = require('discord.js');
 const fs = require('fs');
-const config = require('../config.json');
+const config = require('../../config.json');
 const { EconomyManager } = require('quick.eco');
-const eco = new EconomyManager({
-  adapter: 'sqlite',
-  adapterOptions: { filename: config.ecoDatabase },
-});
-// const { QuickDB } = require('quick.db');
-// const ec = new QuickDB({ filePath: 'sqlite/ec.sqlite' });
+// const eco = new EconomyManager({
+//   adapter: 'sqlite',
+//   adapterOptions: { filename: config.ecoDatabase },
+// });
+const { QuickDB } = require('quick.db');
+const ec = new QuickDB({ filePath: 'database/sqlite/mzad/ec.sqlite' });
 let cooldown = false;
 let test
 module.exports = {
@@ -23,8 +23,8 @@ module.exports = {
       setTimeout(() => {
         cooldown = false;
       }, 1500);
-      const check = await eco.fetchMoney(interaction.user.id)
-      // const check = await ec.get(`Economy_${interaction.guild.id}_${interaction.user.id}.money`);
+      // const check = await eco.fetchMoney(interaction.user.id)
+      const check = await ec.get(`Economy_${interaction.guild.id}_${interaction.user.id}.money`);
       if (typeof pr === 'undefined')
         return interaction.reply({ content: `حدث خطأ`, ephemeral: true });
       if (typeof sa === 'undefined')
@@ -35,7 +35,7 @@ module.exports = {
           ephemeral: true,
         })
 
-      const database = 'mzaddata.json';
+      const database = 'database/mzad/mzaddata.json';
       if (fs.existsSync(database)) {
         const data = JSON.parse(fs.readFileSync(database, 'utf-8'));
         if (data[interaction.user.id]?.isout === true)
@@ -43,7 +43,7 @@ module.exports = {
             content: `لقد انسحبت`,
             ephemeral: true,
           });
-        if (data['total'] && pr > check)
+        if (data['total'] + pr > check)
           return interaction.reply({
             content: `ليس لديك مبلغ كافي`,
             ephemeral: true,
@@ -75,13 +75,13 @@ module.exports = {
         pmsg = await interaction.reply(
           `قام <@${interaction.user.id}> بالمزايدة على المبلغ, ${data['total']}`
         )
-        const channel = interaction.guild.channels.cache.get(
-          config.channelid
-        )
-        await ec.sub(
-          `Economy_${interaction.guild.id}_${interaction.user.id}.money`,
-          parseInt(test)
-        )
+        // const channel = interaction.guild.channels.cache.get(
+        //   config.channelid
+        // )
+        // await ec.sub(
+        //   `Economy_${interaction.guild.id}_${interaction.user.id}.money`,
+        //   parseInt(test)
+        // )
         // if (channel) channel.send(`${interaction.user.id}:-${test}`);
       }
     } catch (error) {
