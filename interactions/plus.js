@@ -2,12 +2,12 @@ const { ButtonInteraction } = require('discord.js');
 const fs = require('fs');
 const config = require('../config.json');
 const { EconomyManager } = require('quick.eco');
-// const eco = new EconomyManager({
-//   adapter: 'sqlite',
-//   adapterOptions: { filename: config.ecoDatabase },
-// });
-const { QuickDB } = require('quick.db');
-const ec = new QuickDB({ filePath: 'database/sqlite/mzad/ec.sqlite' });
+const eco = new EconomyManager({
+  adapter: 'sqlite',
+  adapterOptions: { filename: config.ecoDatabase },
+});
+// const { QuickDB } = require('quick.db');
+// const ec = new QuickDB({ filePath: 'database/sqlite/mzad/ec.sqlite' });
 let cooldown = false;
 let test
 module.exports = {
@@ -23,8 +23,8 @@ module.exports = {
       setTimeout(() => {
         cooldown = false;
       }, 1500);
-      // const check = await eco.fetchMoney(interaction.user.id)
-      const check = await ec.get(`Economy_${interaction.guild.id}_${interaction.user.id}.money`);
+      const check = await eco.fetchMoney(interaction.user.id)
+      // const check = await ec.get(`Economy_${interaction.guild.id}_${interaction.user.id}.money`);
       if (typeof pr === 'undefined')
         return interaction.reply({ content: `حدث خطأ`, ephemeral: true });
       if (typeof sa === 'undefined')
