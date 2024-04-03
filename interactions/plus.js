@@ -1,6 +1,6 @@
 const { ButtonInteraction } = require('discord.js');
 const fs = require('fs');
-const config = require('../config.json');
+const config = require('../../config.json');
 const { EconomyManager } = require('quick.eco');
 const eco = new EconomyManager({
   adapter: 'sqlite',
@@ -35,7 +35,7 @@ module.exports = {
           ephemeral: true,
         })
 
-      const database = 'database/mzad/mzaddata.json';
+      const database = 'mzaddata.json';
       if (fs.existsSync(database)) {
         const data = JSON.parse(fs.readFileSync(database, 'utf-8'));
         if (data[interaction.user.id]?.isout === true)
