@@ -1,6 +1,6 @@
 const { ButtonInteraction } = require('discord.js');
 const fs = require('fs');
-const config = require('../../config.json');
+const config = require('../config.json');
 const { EconomyManager } = require('quick.eco');
 // const eco = new EconomyManager({
 //   adapter: 'sqlite',
